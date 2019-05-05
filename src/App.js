@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ReplaySubject, fromEvent, from, empty, iif, of, merge, interval } from 'rxjs';
+import { ReplaySubject, fromEvent, from, empty, iif, of, merge, interval, range } from 'rxjs';
 import {
   map,
   scan,
@@ -19,11 +19,6 @@ import {
 } from 'rxjs/operators';
 import './App.css';
 import { getAsset } from './mock';
-
-const assetIds = [];
-for (let i = 1; i < 11; i++) {
-  assetIds.push(i);
-}
 
 class App extends Component {
 
@@ -65,7 +60,12 @@ class App extends Component {
         map(val => val + 1),
         startWith(0),
         tap((data) => console.log('assets$ emits new value', data)),
-        mergeMap(() => merge(...assetIds.map(assetId => from(getAsset(assetId))))),
+        mergeMap(
+          () => range(1, 10)
+            .pipe(
+              mergeMap(assetId => from(getAsset(assetId)))
+            )
+        ),
         scan((acc, asset) => {
           return {
             ...acc,
