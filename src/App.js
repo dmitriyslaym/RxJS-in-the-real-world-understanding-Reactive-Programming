@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { ReplaySubject, fromEvent, from, empty, iif, of, merge, interval, range } from 'rxjs';
+import { ReplaySubject, fromEvent, from, empty, iif, of, merge, timer, range } from 'rxjs';
 import {
   map,
   scan,
   tap,
   reduce,
-  withLatestFrom,
   mergeMap,
   switchMap,
   filter,
@@ -55,13 +54,11 @@ class App extends Component {
       )
     );
 
-    const assets$ = interval(5000)
+    const assets$ = timer(0, 5000)
       .pipe(
-        map(val => val + 1),
-        startWith(0),
         tap((data) => console.log('assets$ emits new value', data)),
         mergeMap(
-          () => range(1, 10)
+          () => range(1, 5)
             .pipe(
               mergeMap(assetId => from(getAsset(assetId)))
             )
@@ -142,7 +139,7 @@ class App extends Component {
               <span>Id: {asset.id}</span>
               <span style={{ display: 'inline-block', marginLeft: '10px' }}>Type: {asset.type}</span>
               <span style={{ display: 'inline-block', marginLeft: '10px' }}>Name: {asset.assetName}</span>
-              <span style={{ display: 'inline-block', marginLeft: '10px' }}>Name: {asset.price}</span>
+              <span style={{ display: 'inline-block', marginLeft: '10px' }}>Price: {asset.price}</span>
             </div>
           ))}
         </div>

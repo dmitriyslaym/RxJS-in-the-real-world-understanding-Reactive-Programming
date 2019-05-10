@@ -10,8 +10,7 @@ const createAsset = (assetId) => {
   return {
     id: assetId,
     assetName: `Asset ${assetId}`,
-    price: Math.random() * 5000,
+    price: Math.round((Math.random() + 0.01) * 5000),
     lastUpdate: Date.now(),
-    type: assetId < 6 ? 'Stock' : 'Currency'
   }
 };
